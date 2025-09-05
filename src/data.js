@@ -347,48 +347,47 @@ function makeIdrefNodeElement(ref, originalRef) {
 }
 
 
-
 function makeEdgesForRefs (node) {
-    const entity = node.data.raw
-    const edges = []
+    const entity = node.data.raw;
+    const edges = [];
     if (!entity) {
-      return edges
+        return edges;
     }
-  
+
     function makeEdgeForRef (val, field) {
-      const refs = typeof val === 'string' ? [val] : val
-      refs.forEach(ref => {
-        const edge = makeEdgeElement({
-          id: 'rel-' + entity.id + '-' + ref,
-          source_ref: entity.id,
-          target_ref: ref,
-          relationship_type: field
-        })
-        edges.push(edge)
-      })
+        const refs = typeof val === 'string' ? [val] : val;
+        refs.forEach((ref) => {
+            const edge = makeEdgeElement({
+                id: 'rel-' + entity.id + '-' + ref,
+                source_ref: entity.id,
+                target_ref: ref,
+                relationship_type: field,
+            });
+            edges.push(edge);
+        });
     }
     function findEdges (item, path) {
-      let field = path.join('_')
-      // treat all fields ending with _ref(s) as a reference fields
-      if (field.endsWith('_ref') || field.endsWith('_refs')) {
-        return makeEdgeForRef(item, field)
-      }
-  
-      if (item instanceof Array) {
-        for (const obj of item) {
-          if (obj instanceof Object) {
-            findEdges(obj, path)
-          }
+        const field = path.join('_');
+        // treat all fields ending with _ref(s) as a reference fields
+        if (field.endsWith('_ref') || field.endsWith('_refs')) {
+            return makeEdgeForRef(item, field);
         }
-      } else if (item instanceof Object) {
-        for (const [k, v] of Object.entries(item)) {
-          findEdges(v, path.concat([k]))
+
+        if (item instanceof Array) {
+            for (const obj of item) {
+                if (obj instanceof Object) {
+                    findEdges(obj, path);
+                }
+            }
+        } else if (item instanceof Object) {
+            for (const [k, v] of Object.entries(item)) {
+                findEdges(v, path.concat([k]));
+            }
         }
-      }
     }
-    findEdges(entity, [])
-    return edges
-  }
+    findEdges(entity, []);
+    return edges;
+}
 
 function makeTlpNode(marking) {
     return makeNodeElement({
