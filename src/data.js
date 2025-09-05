@@ -152,7 +152,7 @@ function bundleToGraphElements(bundle, dataProps) {
     nodes.forEach((node) => makeEdgesForRefs(node).forEach(addEdgeFiltered));
 
     // create edges for all extensions in object.extensions
-    nodes.forEach((node) => makeEdgesForExtensions(node).forEach(addEdgeFiltered))
+    nodes.forEach((node) => makeEdgesForExtensions(node).forEach(addEdgeFiltered));
 
     // creates nodes for all missing TLP marking-definitions
     edges
@@ -391,22 +391,22 @@ function makeEdgesForRefs(node) {
 }
 
 
-function makeEdgesForExtensions(node){
-    const entity = node.data.raw
-    const edges = []
+function makeEdgesForExtensions(node) {
+    const entity = node.data.raw;
+    const edges = [];
     if (!entity?.extensions) {
-      return edges
+        return edges;
     }
-    Object.keys(entity.extensions).forEach(def => {
+    Object.keys(entity.extensions).forEach((def) => {
         const edge = makeEdgeElement({
-          id: 'rel-' + entity.id + '-' + def,
-          source_ref: entity.id,
-          target_ref: def,
-          relationship_type: 'extension-definition'
-        })
-        edges.push(edge)
-      })
-      return edges
+            id: 'rel-' + entity.id + '-' + def,
+            source_ref: entity.id,
+            target_ref: def,
+            relationship_type: 'extension-definition',
+        });
+        edges.push(edge);
+    });
+    return edges;
 }
 
 function makeTlpNode(marking) {
